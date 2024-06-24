@@ -3,16 +3,20 @@ package service.impl;
 import dto.StudentDto;
 import entity.Student;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.stereotype.Service;
 import repository.StudentRepository;
 import service.StudentService;
 
 import java.util.List;
 
+@Service
 public class StudentServiceImpl implements StudentService {
 
     @Autowired
     private StudentRepository studentRepository;
     @Override
+    @Cacheable(value = "students")
     public List<Student> getAllStudents() {
         return studentRepository.findAll();
     }
@@ -43,6 +47,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    @Cacheable(value = "students", key = "#name")
     public List<Student> searchByName(String name) {
         return studentRepository.searchByName(name);
     }
